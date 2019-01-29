@@ -140,17 +140,34 @@ class json extends \phpbb\auth\provider\base
         }
     }
 
+    /** 
+     * Validate session works the following way:
+     * If auth_cache is missing and user is still signed in to other site, set the auth_cache cookie
+     * 
+     * 
+     */
     public function validate_session($user)
     {   
-        // if (!isset($_COOKIE[$this->config['json_auth_shared_cookie']]))
-        // {
-        //     return false;
-        // }
-        
-        // $json_user = $this->user_from_json_request();
-        // $this->pre_log('validate session: ' . ($json_user && $user['username'] === $json_user->username) ? true : false);
+        if (!isset($_COOKIE[$this->config['json_auth_shared_cookie']]))
+        {
+            return false;
+        }
 
-        return isset($_COOKIE[$this->config['json_auth_shared_cookie']]);
+        if (!isset($_COOKIE['auth_cache'])) 
+        {
+            $json_user = $this->user_from_json_request();
+            if ($json_user && $user['username'] === $json_user->username) 
+            {
+                set_cookie('auth_cache', $_COOKIE[$this->config['json_auth_shared_cookie']], 0);
+            }
+            else 
+            {
+                return false;
+            }
+            
+        }
+        
+        return $_COOKIE[$this->config['json_auth_shared_cookie']] == $_COOKIE['auth_cache'];
     }
 
     public function acp()
