@@ -1,0 +1,9 @@
+services:
+   auth.provider.json:
+    class: tbsoftware\jsonauth\auth\provider\json
+    arguments:
+        - '@config'
+        - '@request'
+        - '@dbal.conn'
+    tags:
+        - { name: auth.provider }
