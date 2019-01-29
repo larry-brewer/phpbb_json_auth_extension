@@ -29,12 +29,11 @@ namespace tbsoftware\jsonauth\auth\provider;
  * json_auth_cookie
  * 
  * Test 
- * Existing user
- * New User
- * Inactive User
- * Banned User
- * Sign up user rails
- * Admin User
+ * ~Existing user
+ * ~New User
+ * ~Inactive User
+ * ~Banned User
+ * ~Admin User
  */
 
 global $request;
@@ -143,17 +142,15 @@ class json extends \phpbb\auth\provider\base
 
     public function validate_session($user)
     {   
-        if (!isset($_COOKIE[$this->config['json_auth_shared_cookie']]))
-        {
-            return false;
-        }
+        // if (!isset($_COOKIE[$this->config['json_auth_shared_cookie']]))
+        // {
+        //     return false;
+        // }
         
-        $json_user = $this->user_from_json_request();
-        $this->pre_log('validate session: ' . ($json_user && $user['username'] === $json_user->username) ? true : false);
-        
-        
+        // $json_user = $this->user_from_json_request();
+        // $this->pre_log('validate session: ' . ($json_user && $user['username'] === $json_user->username) ? true : false);
 
-        return ($json_user && $user['username'] === $json_user['username']) ? true : false;
+        return isset($_COOKIE[$this->config['json_auth_shared_cookie']]);
     }
 
     public function acp()
