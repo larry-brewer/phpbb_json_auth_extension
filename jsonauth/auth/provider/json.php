@@ -75,8 +75,6 @@ class json extends \phpbb\auth\provider\base
         }
 
         $json_user = $this->user_from_json_request();
-        var_dump($json_user);
-        $this->pre_log("Json user: " . $json_user['username']);
         // are they authenticated already on the remote server
         if (!empty($json_user['username']))
         {
@@ -87,7 +85,6 @@ class json extends \phpbb\auth\provider\base
             $row = $this->db->sql_fetchrow($result);
             $this->db->sql_freeresult($result);
             
-            $this->pre_log('after query: ' . $sql);
             // if this user exists in the database already then go ahead and return them
             if ($row)
             {
@@ -156,9 +153,9 @@ class json extends \phpbb\auth\provider\base
         if (!isset($_COOKIE['auth_cache'])) 
         {
             $json_user = $this->user_from_json_request();
-            if ($json_user && $user['username'] === $json_user->username) 
+            if ($json_user && $user['username'] === $json_user['username']) 
             {
-                set_cookie('auth_cache', $_COOKIE[$this->config['json_auth_shared_cookie']], 0);
+                setcookie('auth_cache', $_COOKIE[$this->config['json_auth_shared_cookie']], 0);
             }
             else 
             {
@@ -256,16 +253,14 @@ class json extends \phpbb\auth\provider\base
         if ($vals && $vals->authenticated) 
         {
             // ONLY FOR DEBUGGING
-            // $vals->username = 'user';
-            var_dump($vals);
+            $vals->username = 'user';
+            // var_dump($vals);
             $vals = $this->merge_json_with_db_user($vals);
         }
         else 
         {
             $vals = null;
         }
-        // For Debugging
-        // var_dump($_COOKIE);
         
         return $vals;
     }
