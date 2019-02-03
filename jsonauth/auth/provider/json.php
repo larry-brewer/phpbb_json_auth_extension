@@ -119,7 +119,7 @@ class json extends \phpbb\auth\provider\base
      */
     public function login($username, $password)
     {
-        $user_row = $this->autologin_json();
+        $user_row = $this->autologin();
         // do not allow empty password
         if ($user_row['authenticated'])
         {
