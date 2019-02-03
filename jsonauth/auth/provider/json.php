@@ -252,8 +252,6 @@ class json extends \phpbb\auth\provider\base
         $vals = json_decode($output);
         if ($vals && $vals->authenticated) 
         {
-            // ONLY FOR DEBUGGING
-            $vals->username = 'user';
             // var_dump($vals);
             $vals = $this->merge_json_with_db_user($vals);
         }
