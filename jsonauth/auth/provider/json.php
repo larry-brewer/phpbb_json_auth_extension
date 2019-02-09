@@ -151,33 +151,12 @@ class json extends \phpbb\auth\provider\base
         $this->pre_log('validate session called');
         if (!isset($_COOKIE[$this->config['json_auth_shared_cookie']]))
         {
-            $this->pre_log('json_auth_shared_cookie missing');
             return false;
         }
 
-        if (!isset($_COOKIE['auth_cache'])) 
-        {
-            $this->pre_log('no auth_cache cookie');
-            $json_user = $this->user_from_json_request();
-            if ($json_user && $user['username'] === $json_user['username']) 
-            {
-                $this->pre_log('usernames matched, set auth_cache cookie');
-                setcookie('auth_cache', $_COOKIE[$this->config['json_auth_shared_cookie']], 0);
-            }
-            else 
-            {
-                return false;
-            }  
-        }
-        $this->pre_log('Cookies match: ' . $_COOKIE[$this->config['json_auth_shared_cookie']] == $_COOKIE['auth_cache']);
-
-        if ($_COOKIE[$this->config['json_auth_shared_cookie']] == $_COOKIE['auth_cache']) {
-            return true;
-        }
-        else {
-            unset($_COOKIE['auth_cache']);
-            return false;
-        }
+        $json_user = $this->user_from_json_request();
+        $this->pre_log('User is valid? ' . $user['username'] === $json_user['username']);
+        return $json_user && $user['username'] === $json_user['username'];
     }
 
     public function acp()
