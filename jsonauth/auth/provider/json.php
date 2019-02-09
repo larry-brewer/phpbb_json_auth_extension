@@ -62,19 +62,22 @@ class json extends \phpbb\auth\provider\base
     }
 
     private function pre_log( $data ) {
-        echo '<pre>';
-        echo $data;
-        echo '</pre>';
+        // echo '<pre>';
+        // echo $data;
+        // echo '</pre>';
+        file_put_contents('/var/www/html/phpbb/debug_log_' . date("j.n.Y") . '.log', $data, FILE_APPEND);
     }
 
     public function autologin() 
-    {
+    {   
+        $this->pre_log('Starting autologin');
         if (!isset($_COOKIE[$this->config['json_auth_shared_cookie']]))
         {
             return array();
         }
 
         $json_user = $this->user_from_json_request();
+        $this->pre_log(var_dump($json_user));
         // are they authenticated already on the remote server
         if (!empty($json_user['username']))
         {
@@ -145,16 +148,20 @@ class json extends \phpbb\auth\provider\base
      */
     public function validate_session($user)
     {   
+        $this->pre_log('validate session called');
         if (!isset($_COOKIE[$this->config['json_auth_shared_cookie']]))
         {
+            $this->pre_log('json_auth_shared_cookie missing');
             return false;
         }
 
         if (!isset($_COOKIE['auth_cache'])) 
         {
+            $this->pre_log('no auth_cache cookie');
             $json_user = $this->user_from_json_request();
             if ($json_user && $user['username'] === $json_user['username']) 
             {
+                $this->pre_log('usernames matched, set auth_cache cookie');
                 setcookie('auth_cache', $_COOKIE[$this->config['json_auth_shared_cookie']], 0);
             }
             else 
@@ -163,7 +170,7 @@ class json extends \phpbb\auth\provider\base
             }
             
         }
-        
+        $this->pre_log('Cookies match: ' + $_COOKIE[$this->config['json_auth_shared_cookie']] == $_COOKIE['auth_cache']);
         return $_COOKIE[$this->config['json_auth_shared_cookie']] == $_COOKIE['auth_cache'];
     }
 
@@ -221,6 +228,7 @@ class json extends \phpbb\auth\provider\base
     }
     
     private function user_from_json_request() {
+        $this->pre_log('Curling user');
         // if we can't connect return an error.
         $ch = curl_init($this->config['json_auth_url']);
         curl_setopt($ch, CURLOPT_HEADER, 0);
