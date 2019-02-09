@@ -65,19 +65,17 @@ class json extends \phpbb\auth\provider\base
         // echo '<pre>';
         // echo $data;
         // echo '</pre>';
-        file_put_contents('/var/www/html/phpbb-staging/cache/production/debug_log_' . date("j.n.Y") . '.log', $data . "\r\n", FILE_APPEND);
+        // file_put_contents('/var/www/html/phpbb-staging/cache/production/debug_log_' . date("j.n.Y") . '.log', $data . "\r\n", FILE_APPEND);
     }
 
     public function autologin() 
     {   
-        $this->pre_log('Starting autologin');
         if (!isset($_COOKIE[$this->config['json_auth_shared_cookie']]))
         {
             return array();
         }
 
         $json_user = $this->user_from_json_request();
-        $this->pre_log(var_dump($json_user));
         // are they authenticated already on the remote server
         if (!empty($json_user['username']))
         {
@@ -148,14 +146,12 @@ class json extends \phpbb\auth\provider\base
      */
     public function validate_session($user)
     {   
-        $this->pre_log('validate session called');
         if (!isset($_COOKIE[$this->config['json_auth_shared_cookie']]))
         {
             return false;
         }
 
         $json_user = $this->user_from_json_request();
-        $this->pre_log('User is valid? ' . $user['username'] === $json_user['username']);
         return $json_user && $user['username'] === $json_user['username'];
     }
 
@@ -213,7 +209,6 @@ class json extends \phpbb\auth\provider\base
     }
     
     private function user_from_json_request() {
-        $this->pre_log('Curling user');
         // if we can't connect return an error.
         $ch = curl_init($this->config['json_auth_url']);
         curl_setopt($ch, CURLOPT_HEADER, 0);
