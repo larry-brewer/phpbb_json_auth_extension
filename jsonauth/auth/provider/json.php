@@ -167,11 +167,17 @@ class json extends \phpbb\auth\provider\base
             else 
             {
                 return false;
-            }
-            
+            }  
         }
         $this->pre_log('Cookies match: ' . $_COOKIE[$this->config['json_auth_shared_cookie']] == $_COOKIE['auth_cache']);
-        return $_COOKIE[$this->config['json_auth_shared_cookie']] == $_COOKIE['auth_cache'];
+
+        if ($_COOKIE[$this->config['json_auth_shared_cookie']] == $_COOKIE['auth_cache']) {
+            return true;
+        }
+        else {
+            unset($_COOKIE['auth_cache']);
+            return false;
+        }
     }
 
     public function acp()
