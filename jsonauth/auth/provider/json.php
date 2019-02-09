@@ -170,7 +170,7 @@ class json extends \phpbb\auth\provider\base
             }
             
         }
-        $this->pre_log('Cookies match: ' + $_COOKIE[$this->config['json_auth_shared_cookie']] == $_COOKIE['auth_cache']);
+        $this->pre_log('Cookies match: ' . $_COOKIE[$this->config['json_auth_shared_cookie']] == $_COOKIE['auth_cache']);
         return $_COOKIE[$this->config['json_auth_shared_cookie']] == $_COOKIE['auth_cache'];
     }
 
