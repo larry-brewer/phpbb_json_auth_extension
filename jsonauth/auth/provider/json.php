@@ -65,7 +65,7 @@ class json extends \phpbb\auth\provider\base
         // echo '<pre>';
         // echo $data;
         // echo '</pre>';
-        file_put_contents('/var/www/html/phpbb/debug_log_' . date("j.n.Y") . '.log', $data, FILE_APPEND);
+        file_put_contents('/var/www/html/phpbb-staging/cache/production/debug_log_' . date("j.n.Y") . '.log', $data, FILE_APPEND);
     }
 
     public function autologin() 
